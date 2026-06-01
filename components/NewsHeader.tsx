@@ -32,7 +32,7 @@ export default function NewsHeader({
         <span className="font-medium text-midnight-ink">
           {total.toLocaleString("ko-KR")}
         </span>
-        건 중 최신 {itemCount}건
+        건 중 최신 {itemCount}건 표시
       </p>
       {fetchedAt && (
         <p className="text-caption mt-2">

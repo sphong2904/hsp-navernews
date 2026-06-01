@@ -243,4 +243,26 @@ body {
     font-weight: 500;
     line-height: var(--leading-caption);
   }
+
+  .pagination-btn {
+    background: var(--color-paper-white);
+    color: var(--color-midnight-ink);
+    border: 1px solid var(--color-ghost-border);
+    border-radius: var(--radius-inputs);
+    padding: 8px 14px;
+    font-size: var(--text-caption);
+    font-weight: 600;
+    line-height: var(--leading-caption);
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .pagination-btn:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--color-electric-violet) 40%, transparent);
+    background: var(--color-cloud-canvas);
+  }
+
+  .pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
 }

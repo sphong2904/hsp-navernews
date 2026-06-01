@@ -6,7 +6,7 @@ import type {
 } from "./types";
 
 const NAVER_NEWS_API_URL = "https://openapi.naver.com/v1/search/news.json";
-const DEFAULT_DISPLAY = 50;
+export const NEWS_FETCH_COUNT = 100;
 
 export function stripHtml(text: string): string {
   return text
@@ -71,7 +71,7 @@ function getCredentials(): { clientId: string; clientSecret: string } {
 
 export async function fetchNaverNews(
   query: string,
-  display = DEFAULT_DISPLAY
+  display = NEWS_FETCH_COUNT
 ): Promise<NewsApiSuccess> {
   const trimmedQuery = query.trim();
   if (!trimmedQuery) {

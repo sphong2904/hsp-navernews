@@ -5,6 +5,7 @@ interface NewsListProps {
   items: NewsArticle[];
   isLoading: boolean;
   error: string | null;
+  startIndex?: number;
 }
 
 function SkeletonArticle() {
@@ -26,7 +27,12 @@ function SkeletonArticle() {
   );
 }
 
-export default function NewsList({ items, isLoading, error }: NewsListProps) {
+export default function NewsList({
+  items,
+  isLoading,
+  error,
+  startIndex = 0,
+}: NewsListProps) {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" aria-busy="true" aria-label="뉴스 불러오는 중">
@@ -63,7 +69,7 @@ export default function NewsList({ items, isLoading, error }: NewsListProps) {
       {items.map((article, index) => (
         <li key={`${article.link}-${index}`} className="h-full">
           <NewsCard
-            index={index + 1}
+            index={startIndex + index + 1}
             article={article}
           />
         </li>

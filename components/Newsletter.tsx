@@ -1,13 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { NewsApiError, NewsApiSuccess } from "@/lib/types";
 import NewsHeader from "./NewsHeader";
 import NewsList from "./NewsList";
+import NewsPagination from "./NewsPagination";
 import SearchBar from "./SearchBar";
 import SiteNav from "./SiteNav";
 
 const DEFAULT_QUERY = "오늘";
+const PAGE_SIZE = 30;
 
 export default function Newsletter() {
   const [searchInput, setSearchInput] = useState(DEFAULT_QUERY);
@@ -15,8 +17,11 @@ export default function Newsletter() {
   const [data, setData] = useState<NewsApiSuccess | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const listRef = useRef<HTMLDivElement>(null);
 
   const fetchNews = useCallback(async (query: string) => {
+    setCurrentPage(1);
     setIsLoading(true);
     setError(null);
 
@@ -56,6 +61,20 @@ export default function Newsletter() {
     fetchNews(query);
   };
 
+  const allItems = data?.items ?? [];
+  const totalPages = Math.max(1, Math.ceil(allItems.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const pageItems = allItems.slice(
+    (safePage - 1) * PAGE_SIZE,
+    safePage * PAGE_SIZE
+  );
+
+  const handlePageChange = (page: number) => {
+    const next = Math.max(1, Math.min(page, totalPages));
+    setCurrentPage(next);
+    listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <>
       <SiteNav />
@@ -77,11 +96,25 @@ export default function Newsletter() {
             />
           </div>
 
-          <NewsList
-            items={data?.items ?? []}
-            isLoading={isLoading}
-            error={error}
-          />
+          <div ref={listRef} className="flex flex-col gap-8 scroll-mt-24">
+            <NewsList
+              items={pageItems}
+              isLoading={isLoading}
+              error={error}
+              startIndex={(safePage - 1) * PAGE_SIZE}
+            />
+
+            {!isLoading && !error && allItems.length > 0 && (
+              <NewsPagination
+                currentPage={safePage}
+                totalPages={totalPages}
+                pageSize={PAGE_SIZE}
+                totalItems={allItems.length}
+                onPageChange={handlePageChange}
+                disabled={isLoading}
+              />
+            )}
+          </div>
 
           <footer className="border-t border-ghost-border pt-8 text-center">
             <p className="text-caption">

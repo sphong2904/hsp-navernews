@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchNaverNews } from "@/lib/naver-news";
+import { fetchNaverNews, NEWS_FETCH_COUNT } from "@/lib/naver-news";
 import type { NewsApiError } from "@/lib/types";
 
 const DEFAULT_QUERY = "오늘";
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const query = searchParams.get("q")?.trim() || DEFAULT_QUERY;
 
   try {
-    const data = await fetchNaverNews(query, 50);
+    const data = await fetchNaverNews(query, NEWS_FETCH_COUNT);
     return NextResponse.json(data);
   } catch (error) {
     const message =
