@@ -1,0 +1,246 @@
+@import "tailwindcss";
+
+:root {
+  --color-midnight-ink: #202020;
+  --color-cloud-canvas: #f5f5f5;
+  --color-paper-white: #ffffff;
+  --color-muted-ash: #333333;
+  --color-ghost-border: #f7f5fd;
+  --color-electric-violet: #5757f8;
+
+  --text-caption: 14px;
+  --leading-caption: 1.2;
+  --text-body: 16px;
+  --leading-body: 1.4;
+  --text-subheading: 18px;
+  --leading-subheading: 1.43;
+  --text-heading-sm: 20px;
+  --leading-heading-sm: 1.43;
+  --text-heading: 26px;
+  --leading-heading: 1.2;
+  --tracking-heading: -0.52px;
+  --text-heading-lg: 36px;
+  --leading-heading-lg: 1;
+  --tracking-heading-lg: -0.72px;
+  --text-display: 48px;
+  --leading-display: 0.97;
+  --tracking-display: -0.96px;
+
+  --page-max-width: 1400px;
+  --section-gap: 40px;
+  --card-padding: 20px;
+  --element-gap: 24px;
+
+  --radius-default: 8px;
+  --radius-inputs: 10px;
+  --radius-images: 12px;
+  --radius-buttons: 9999px;
+}
+
+@theme inline {
+  --color-midnight-ink: #202020;
+  --color-cloud-canvas: #f5f5f5;
+  --color-paper-white: #ffffff;
+  --color-muted-ash: #333333;
+  --color-ghost-border: #f7f5fd;
+  --color-electric-violet: #5757f8;
+
+  --font-display: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-default: 8px;
+  --radius-input: 10px;
+  --radius-button: 9999px;
+}
+
+body {
+  background: var(--color-cloud-canvas);
+  color: var(--color-midnight-ink);
+  font-family: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .font-display {
+    font-family: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .font-body {
+    font-family: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .text-display {
+    font-family: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+    font-size: var(--text-display);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+    font-weight: 600;
+    color: var(--color-midnight-ink);
+  }
+
+  .text-heading-lg {
+    font-family: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+    font-size: var(--text-heading-lg);
+    line-height: var(--leading-heading-lg);
+    letter-spacing: var(--tracking-heading-lg);
+    font-weight: 600;
+    color: var(--color-midnight-ink);
+  }
+
+  .text-heading {
+    font-family: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+    font-size: var(--text-heading);
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-heading);
+    font-weight: 600;
+    color: var(--color-midnight-ink);
+  }
+
+  .text-heading-sm {
+    font-family: "Pretendard", ui-sans-serif, system-ui, sans-serif;
+    font-size: var(--text-heading-sm);
+    line-height: var(--leading-heading-sm);
+    font-weight: 600;
+    color: var(--color-midnight-ink);
+  }
+
+  .text-subheading {
+    font-size: var(--text-subheading);
+    line-height: var(--leading-subheading);
+    font-weight: 500;
+    color: var(--color-muted-ash);
+  }
+
+  .text-body {
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+    font-weight: 500;
+    color: var(--color-midnight-ink);
+  }
+
+  .text-caption {
+    font-size: var(--text-caption);
+    line-height: var(--leading-caption);
+    font-weight: 500;
+    color: var(--color-muted-ash);
+  }
+
+  .bg-engineered-grid {
+    background-color: var(--color-cloud-canvas);
+    background-image: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-muted-ash) 12%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 24px 24px;
+  }
+
+  .card-default {
+    background: var(--color-cloud-canvas);
+    border-radius: var(--radius-default);
+    padding: var(--card-padding);
+  }
+
+  .card-reading {
+    background: var(--color-paper-white);
+    border-radius: var(--radius-default);
+    border: 1px solid var(--color-ghost-border);
+    padding: var(--card-padding);
+  }
+
+  .input-field {
+    background: var(--color-paper-white);
+    color: var(--color-muted-ash);
+    border: 1px solid var(--color-ghost-border);
+    border-radius: var(--radius-inputs);
+    padding: 16px 20px;
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+    font-weight: 500;
+  }
+
+  .input-field::placeholder {
+    color: var(--color-muted-ash);
+    opacity: 0.7;
+  }
+
+  .input-field:focus {
+    outline: none;
+    border-color: var(--color-electric-violet);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-electric-violet) 20%, transparent);
+  }
+
+  .btn-primary {
+    background: var(--color-electric-violet);
+    color: var(--color-paper-white);
+    border-radius: var(--radius-buttons);
+    padding: 10px 20px;
+    font-size: var(--text-body);
+    font-weight: 500;
+    line-height: var(--leading-body);
+    transition: opacity 0.15s ease;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    background: var(--color-midnight-ink);
+    color: var(--color-paper-white);
+    border-radius: var(--radius-buttons);
+    padding: 10px 20px;
+    font-size: var(--text-caption);
+    font-weight: 500;
+    line-height: var(--leading-caption);
+    transition: opacity 0.15s ease;
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    opacity: 0.88;
+  }
+
+  .btn-secondary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .btn-nav-outlined {
+    background: var(--color-paper-white);
+    color: var(--color-midnight-ink);
+    border: 1px solid var(--color-ghost-border);
+    border-radius: var(--radius-buttons);
+    padding: 5px 10px;
+    font-size: var(--text-caption);
+    font-weight: 500;
+    line-height: var(--leading-caption);
+    transition: background 0.15s ease;
+  }
+
+  .btn-nav-outlined:hover:not(:disabled) {
+    background: var(--color-cloud-canvas);
+  }
+
+  .btn-nav-outlined:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .badge-nav {
+    background: var(--color-cloud-canvas);
+    color: var(--color-midnight-ink);
+    border-radius: var(--radius-default);
+    padding: 5px 10px;
+    font-size: var(--text-caption);
+    font-weight: 500;
+    line-height: var(--leading-caption);
+  }
+}
