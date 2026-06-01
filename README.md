@@ -56,7 +56,20 @@ npm run start
 
 ### 1. GitHub에 푸시
 
-이 저장소를 GitHub에 올린 뒤 Vercel에서 Import합니다.
+GitHub에서 **빈 저장소**를 만든 뒤 (README/.gitignore 추가하지 않음):
+
+```powershell
+.\scripts\deploy-github.ps1 -RemoteUrl "https://github.com/YOUR_USER/website_naver-news.git"
+```
+
+또는 수동:
+
+```bash
+git remote add origin https://github.com/YOUR_USER/website_naver-news.git
+git push -u origin main
+```
+
+이후 Vercel에서 해당 저장소를 Import합니다.
 
 ### 2. Vercel 환경 변수 (필수)
 
@@ -82,11 +95,24 @@ Vercel은 `.env.local` 파일을 읽지 않습니다. 반드시 대시보드에�
 - **Build Command**: `npm run build`
 - **Install Command**: `npm install`
 
-### 4. 배포 후 확인
+### 4. CLI로 배포 (선택)
+
+```powershell
+npx vercel login
+.\scripts\deploy-vercel.ps1
+```
+
+### 5. 배포 후 확인
 
 - 메인 페이지에서 뉴스 목록 로드
 - 검색 및 AI 요약 동작
 - 브라우저 개발자 도구 Network 탭에 API 키가 노출되지 않는지 확인 (내부 `/api/news`, `/api/summarize`만 호출)
+
+자동 검증:
+
+```powershell
+.\scripts\verify-production.ps1 -BaseUrl "https://your-app.vercel.app"
+```
 
 ## API 라우트
 
