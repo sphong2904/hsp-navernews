@@ -24,10 +24,18 @@ export interface NewsArticle {
   source: string;
 }
 
+import type { NewsCategoryId } from "./news-categories";
+
+export type { NewsCategoryId };
+
 export interface NewsApiSuccess {
   query: string;
+  userQuery: string;
+  category: NewsCategoryId;
+  categoryLabel: string;
   total: number;
   display: number;
+  filteredFrom?: number;
   lastBuildDate: string;
   fetchedAt: string;
   items: NewsArticle[];

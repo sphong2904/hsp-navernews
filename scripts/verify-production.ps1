@@ -1,4 +1,4 @@
-# 프로덕션 배포 검증
+# Production deployment verification
 # Usage: .\scripts\verify-production.ps1 -BaseUrl "https://your-app.vercel.app"
 
 param(
@@ -9,20 +9,42 @@ param(
 $ErrorActionPreference = "Stop"
 $base = $BaseUrl.TrimEnd("/")
 
-$query = [char]0xC624 + [char]0xB298  # 오늘
-Write-Host "GET $base/api/news"
-$news = Invoke-RestMethod -Uri "$base/api/news?q=$([uri]::EscapeDataString($query))"
-if (-not $news.items -or $news.items.Count -lt 1) {
-  throw "News list is empty."
-}
-Write-Host "OK: $($news.items.Count) items"
+function Test-NewsEndpoint {
+  param(
+    [string]$Label,
+    [string]$Uri
+  )
 
-$secretPattern = "NAVER_CLIENT|OPENROUTER_API|client_secret|sk-or-"
-$newsJson = ($news | ConvertTo-Json -Depth 5)
-if ($newsJson -match $secretPattern) {
-  throw "Secret pattern detected in news API response."
+  Write-Host "GET $Label"
+  $news = Invoke-RestMethod -Uri $Uri
+  if (-not $news.items -or $news.items.Count -lt 1) {
+    throw "$Label : news list is empty."
+  }
+  Write-Host "OK: $($news.items.Count) items (category=$($news.category))"
+
+  $secretPattern = "NAVER_CLIENT|OPENROUTER_API|client_secret|sk-or-"
+  $newsJson = ($news | ConvertTo-Json -Depth 5)
+  if ($newsJson -match $secretPattern) {
+    throw "$Label : secret pattern detected in response."
+  }
+  return $news
 }
-Write-Host "OK: no secret patterns in news response"
+
+$query = [char]0xC624 + [char]0xB298
+Test-NewsEndpoint -Label "all" -Uri "$base/api/news?q=$([uri]::EscapeDataString($query))&category=all"
+Test-NewsEndpoint -Label "economy" -Uri "$base/api/news?q=&category=economy"
+
+Write-Host "GET invalid category (expect 400)"
+try {
+  Invoke-RestMethod -Uri "$base/api/news?category=invalid"
+  throw "invalid category should return 400"
+} catch {
+  $status = $_.Exception.Response.StatusCode.value__
+  if ($status -ne 400) {
+    throw "invalid category: expected 400, got $status"
+  }
+  Write-Host "OK: invalid category returns 400"
+}
 
 Write-Host "POST $base/api/summarize"
 $sumBody = '{"title":"verify","description":"Short description for production API check."}'

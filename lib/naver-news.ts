@@ -2,11 +2,11 @@ import type {
   NaverNewsApiResponse,
   NaverNewsItemRaw,
   NewsArticle,
-  NewsApiSuccess,
 } from "./types";
 
 const NAVER_NEWS_API_URL = "https://openapi.naver.com/v1/search/news.json";
 export const NEWS_FETCH_COUNT = 100;
+const NAVER_MAX_START = 1000;
 
 export function stripHtml(text: string): string {
   return text
@@ -69,10 +69,18 @@ function getCredentials(): { clientId: string; clientSecret: string } {
   return { clientId, clientSecret };
 }
 
+export interface NaverFetchResult {
+  total: number;
+  display: number;
+  lastBuildDate: string;
+  items: NewsArticle[];
+}
+
 export async function fetchNaverNews(
   query: string,
-  display = NEWS_FETCH_COUNT
-): Promise<NewsApiSuccess> {
+  display = NEWS_FETCH_COUNT,
+  start = 1
+): Promise<NaverFetchResult> {
   const trimmedQuery = query.trim();
   if (!trimmedQuery) {
     throw new Error("검색어를 입력해 주세요.");
@@ -80,10 +88,13 @@ export async function fetchNaverNews(
 
   const { clientId, clientSecret } = getCredentials();
 
+  const safeDisplay = Math.min(Math.max(display, 1), 100);
+  const safeStart = Math.min(Math.max(start, 1), NAVER_MAX_START);
+
   const params = new URLSearchParams({
     query: trimmedQuery,
-    display: String(Math.min(Math.max(display, 1), 100)),
-    start: "1",
+    display: String(safeDisplay),
+    start: String(safeStart),
     sort: "date",
   });
 
@@ -110,11 +121,9 @@ export async function fetchNaverNews(
   const data: NaverNewsApiResponse = await response.json();
 
   return {
-    query: trimmedQuery,
     total: data.total,
     display: data.display,
     lastBuildDate: data.lastBuildDate,
-    fetchedAt: new Date().toISOString(),
     items: (data.items ?? []).map(mapItem),
   };
 }

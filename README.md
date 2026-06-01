@@ -2,10 +2,13 @@
 
 네이버 검색 API로 최신 뉴스 100건을 조회하고, OpenRouter AI로 기사를 요약해 보여주는 Next.js 뉴스레터 웹앱입니다.
 
+**GitHub**: [sphong2904/hsp-navernews](https://github.com/sphong2904/hsp-navernews)
+
 ## 기능
 
 - 기본 검색어 `오늘`로 최신 뉴스 100건 표시 (날짜순), 페이지당 30건씩 페이지네이션 (4페이지)
-- 키워드 검색
+- **카테고리 + 키워드 하이브리드 검색**: 전체/종합/경제/정치/사회/IT·과학/생활·문화/스포츠/세계
+- 키워드 단독 검색 또는 카테고리만 선택 검색
 - 기사별 AI 요약 (OpenRouter 무료 모델)
 - 반응형 그리드 레이아웃 (모바일 1열 / 태블릿 2열 / 데스크톱 3열)
 
@@ -45,10 +48,10 @@ npm run dev
 
 브라우저에서 http://localhost:3000 접속 (포트가 사용 중이면 3001 등으로 안내됨)
 
-### 4. 빌드
+### 4. 빌드·점검
 
 ```bash
-npm run build
+npm run check   # lint + build
 npm run start
 ```
 
@@ -56,20 +59,18 @@ npm run start
 
 ### 1. GitHub에 푸시
 
-GitHub에서 **빈 저장소**를 만든 뒤 (README/.gitignore 추가하지 않음):
-
 ```powershell
-.\scripts\deploy-github.ps1 -RemoteUrl "https://github.com/YOUR_USER/website_naver-news.git"
+.\scripts\deploy-github.ps1 -RemoteUrl "https://github.com/sphong2904/hsp-navernews.git"
 ```
 
 또는 수동:
 
 ```bash
-git remote add origin https://github.com/YOUR_USER/website_naver-news.git
+git remote add origin https://github.com/sphong2904/hsp-navernews.git
 git push -u origin main
 ```
 
-이후 Vercel에서 해당 저장소를 Import합니다.
+이후 Vercel에서 [sphong2904/hsp-navernews](https://github.com/sphong2904/hsp-navernews) 저장소를 Import합니다.
 
 ### 2. Vercel 환경 변수 (필수)
 
@@ -114,12 +115,26 @@ npx vercel login
 .\scripts\verify-production.ps1 -BaseUrl "https://your-app.vercel.app"
 ```
 
+## 카테고리 검색
+
+네이버 뉴스 검색 API에는 **카테고리 파라미터가 없습니다**. 이 앱은 아래 방식으로 정확도를 높입니다.
+
+1. **검색어 조합**: 카테고리별 기본 검색어 + 사용자 키워드를 합쳐 네이버 API 호출
+2. **규칙 필터**: 제목 또는 요약에 카테고리 핵심 키워드가 있어야 표시, 제외어가 있으면 제거
+3. **결과 보축**: 필터 후 100건이 채워지지 않으면 `start=101, 201…`으로 추가 수집
+
+카테고리 정의·키워드는 [`lib/news-categories.ts`](lib/news-categories.ts)에서 수정할 수 있습니다.
+
+**한계**: 네이버 뉴스 앱의 섹션 탭과 100% 동일한 결과는 보장되지 않습니다.
+
 ## API 라우트
 
 | 경로 | 설명 |
 |------|------|
-| `GET /api/news?q=` | 네이버 뉴스 검색 프록시 (기본 `q=오늘`, 최대 100건) |
+| `GET /api/news?q=&category=` | 네이버 뉴스 검색 프록시 (기본 `q=오늘`, `category=all`, 최대 100건) |
 | `POST /api/summarize` | OpenRouter AI 요약 (`{ title, description }`) |
+
+`category` 값: `all`, `general`, `economy`, `politics`, `society`, `it`, `culture`, `sports`, `world`
 
 ## 보안
 

@@ -1,5 +1,5 @@
 # GitHub에 첫 푸시 (저장소를 먼저 GitHub에서 생성한 뒤 실행)
-# Usage: .\scripts\deploy-github.ps1 -RemoteUrl "https://github.com/YOUR_USER/website_naver-news.git"
+# Usage: .\scripts\deploy-github.ps1 -RemoteUrl "https://github.com/sphong2904/hsp-navernews.git"
 
 param(
   [Parameter(Mandatory = $true)]
